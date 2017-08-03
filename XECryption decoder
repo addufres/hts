@@ -1,0 +1,33 @@
+<?php
+$code = "";//input code to be decyphered here
+$numbers = explode(".", $code); //makes an array from numbers
+array_shift($numbers); //removes the first empty element (because of the first .)
+
+$length= count($numbers);
+$new_numbers = Array();
+for ($i=0;$i<$length;$i += 3) //takes 3 by 3 elements and adds them
+{
+	$new_numbers[] = $numbers[$i]+$numbers[$i+1]+$numbers[$i+2];
+}
+
+$count = array_count_values($new_numbers); //makes an array with values as keys, and their frequency as values
+$key = array_search(max($count), $count) - ord(" "); //find the most often element value (should be space) and substracts the space value; it should be the key
+echo "Key value:<br />\r\n";
+echo "$key<br />\r\n<br />\r\n";
+
+
+function normalize($number, $key) //substracts the key value from the number
+{
+	return $number - $key;
+}
+$char_keys = array_map("normalize", $new_numbers, array_fill(0, count($new_numbers), $key)); //substracts the key value from the numbers, giving character numbers
+
+function char_convert($char) //converts number to character
+{
+	return chr($char);
+}
+$count = array_map("char_convert", $char_keys); //converts all numbers to characters
+echo "Decrypted message:<br />\r\n";
+echo implode("", $count);
+
+?>
